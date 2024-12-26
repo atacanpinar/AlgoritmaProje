@@ -12,7 +12,7 @@ typedef struct {
 
 // Fonksiyonlar
 double enBuyukSatis(personel p[], int n); // En büyük satış değerini bulur
-void alfabetikSirala(personel p[], int n); // Çalışanları soyadına göre sıralar
+void alfabetikSiralaAd(personel p[], int n); // Çalışanları adına göre sıralar
 void dosyayaYaz(personel p[], int n, const char *dosyaAdi); // Çalışan bilgilerini bir dosyaya yazar
 
 int main() {
@@ -26,7 +26,6 @@ int main() {
     // satis.txt dosyasını aç
     dosya = fopen(dosyaYolu, "r");
     if (dosya == NULL) {
-        // Dosya açılmazsa hata mesajı yazdırılır
         printf("Hata: satis.txt dosyasi bulunamadi! Lutfen dosyayi manuel olarak olusturup calistirin.\n");
         return 1; // Program sonlandırılır
     }
@@ -46,8 +45,8 @@ int main() {
         calisanlar[i].spd = ENB - calisanlar[i].satis; // Performans değerini hesapla
     }
 
-    // Çalışanları soyadlarına göre alfabetik sırala
-    alfabetikSirala(calisanlar, n);
+    // Çalışanları adına göre alfabetik sırala
+    alfabetikSiralaAd(calisanlar, n);
 
     // Sonuçları prfrms.txt dosyasına yaz
     dosyayaYaz(calisanlar, n, prfrmsDosyaYolu);
@@ -55,14 +54,12 @@ int main() {
     // prfrms.txt dosyasını ekrana bastır
     dosya = fopen(prfrmsDosyaYolu, "r");
     if (dosya == NULL) {
-        // Çıkış dosyası açılamazsa hata mesajı yazdır
         printf("Hata: prfrms.txt dosyasi acilamadi!\n");
         return 1; // Program sonlandırılır
     }
 
-    // Dosyanın içeriğini ekrana yazdır
     printf("\nprfrms.txt dosyasinin icerigi:\n");
-    char satir[100]; // Satır okuma tamponu
+    char satir[100]; // Satır okuma a
     while (fgets(satir, sizeof(satir), dosya) != NULL) {
         printf("%s", satir); // Her bir satırı ekrana yazdır
     }
@@ -74,21 +71,21 @@ int main() {
 
 // En büyük satış değerini bulan fonksiyon
 double enBuyukSatis(personel p[], int n) {
-    double max = p[0].satis; // İlk çalışanın satışını başlangıç değeri olarak al
+    double max = p[0].satis;
     for (int i = 1; i < n; i++) {
-        if (p[i].satis > max) { // Daha büyük bir satış değeri bulunursa
-            max = p[i].satis; // Maksimum değeri güncelle
+        if (p[i].satis > max) {
+            max = p[i].satis;
         }
     }
-    return max; // En büyük satış değerini döndür
+    return max;
 }
 
-// Soyada göre alfabetik sıralama yapan fonksiyon (Bubble Sort kullanıldı)
-void alfabetikSirala(personel p[], int n) {
+// Adına göre alfabetik sıralama yapan fonksiyon (Bubble Sort kullanıldı)
+void alfabetikSiralaAd(personel p[], int n) {
     personel temp; // Geçici değişken
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
-            if (strcmp(p[j].soyad, p[j + 1].soyad) > 0) { // Alfabetik sırayı kontrol et
+            if (strcmp(p[j].ad, p[j + 1].ad) > 0) { // Alfabetik sırayı kontrol et (Adına göre)
                 temp = p[j];
                 p[j] = p[j + 1];
                 p[j + 1] = temp; // Yer değiştir
@@ -99,16 +96,14 @@ void alfabetikSirala(personel p[], int n) {
 
 // Sonuçları dosyaya yazan fonksiyon
 void dosyayaYaz(personel p[], int n, const char *dosyaAdi) {
-    FILE *dosya = fopen(dosyaAdi, "w"); // Dosya yazma modunda aç
+    FILE *dosya = fopen(dosyaAdi, "w");
     if (dosya == NULL) {
-        // Dosya açılamazsa hata mesajı yazdır
         printf("Dosya yazma hatasi!\n");
         return;
     }
     for (int i = 0; i < n; i++) {
-        // Her bir çalışanın bilgilerini dosyaya yaz
-        fprintf(dosya, "%s %s %.2lf\n", p[i].soyad, p[i].ad, p[i].spd);
+        fprintf(dosya, "%s %s %.2lf\n", p[i].ad, p[i].soyad, p[i].spd); // Önce ad, sonra soyad yazdır
     }
-    fclose(dosya); // Dosyayı kapat
-    printf("Sonuclar %s dosyasina yazildi.\n", dosyaAdi); // Bilgilendirme mesajı
+    fclose(dosya);
+    printf("Sonuclar %s dosyasina yazildi.\n", dosyaAdi);
 }
